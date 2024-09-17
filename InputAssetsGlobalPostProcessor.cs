@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿#if UNITY_EDITOR
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using Core.Hybrid.Hybrid.CodeGeneration;
@@ -18,7 +19,7 @@ namespace DotsInput
             {
                 var assetName = importedAssets[i];
                 if (Path.GetExtension(assetName) != ".inputactions") continue;
-                if(assetName.Contains("ignore")) continue;
+                if (assetName.Contains("ignore")) continue;
                 Debug.Log(assetName);
                 UpdateEnums(assetName);
             }
@@ -61,3 +62,4 @@ namespace DotsInput
         }
     }
 }
+#endif

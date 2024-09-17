@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using Unity.Entities;
 using Unity.Mathematics;
+using UnityEngine.InputSystem;
 
 namespace DotsInput
 {
@@ -10,7 +11,10 @@ namespace DotsInput
         public int2 primitiveRange;
         public int2 axisRange;
     }
-
+    public partial struct DotsInputAsset : IComponentData
+    {
+        public UnityObjectRef<InputActionAsset> asset;
+    }
     [InternalBufferCapacity(0)]
     public partial struct DotsInputAxisElement : IBufferElementData
     {

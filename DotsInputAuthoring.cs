@@ -6,10 +6,7 @@ using UnityEngine.InputSystem;
 
 namespace DotsInput
 {
-    public partial struct DotsInputAsset : IComponentData
-    {
-        public UnityObjectRef<InputActionAsset> asset;
-    }
+
 
     [DisallowMultipleComponent]
     public class DotsInputAuthoring : MonoBehaviour
