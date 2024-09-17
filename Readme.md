@@ -19,7 +19,7 @@ DynamicBuffer<DotsInputAxisElement> a,
 in EveCarrier carrier,
 Entity entity)
 {
-        var input = DotsInputWrapper<EveLomkaInputPrimitive, EveLomkaInputAxis>.FromJob(tick, p, a);
+        var input = DotsInputWrapper<UrPrimitiveEnum, UrAxisEnum>.FromJob(tick, p, a);
 
         input.IsPressedNow(UrInputENum.PLAYER_FIRE)
     }
