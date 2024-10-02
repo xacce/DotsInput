@@ -24,6 +24,9 @@ namespace DotsInput
                 case "Axis":
                     type = DotsInputType.Float;
                     break;
+                case "" when c.type == InputActionType.Button:
+                    type = DotsInputType.Bool;
+                    break;
                 default:
                     type = DotsInputType.Int;
                     return false;
