@@ -16,6 +16,7 @@ namespace DotsInput
         private Dictionary<int, (int, DotsInputMapper.DotsInputType)> _outPaths;
         private uint _tick;
         private List<InputAction> _cleanupActions;
+        private List<InputActionAsset> registered;
 
         private void RegisterPrimitives(ref DotsInputData dotsInput, InputActionAsset asset, DynamicBuffer<DotsInputPrimitiveElement> primitiveBuffer)
         {
@@ -57,10 +58,10 @@ namespace DotsInput
                         break;
                     default: continue;
                 }
-
                 axisBuffer.Add(new DotsInputAxisElement() { });
                 inputs.Add(new DotsInputAxisElement() { });
                 _outPaths[c.GetHashCode()] = (_axis.Length + i, type);
+                Debug.Log($"Bind: {c.name} : {c.GetHashCode()}");
                 c.started += OnEvt;
                 c.performed += OnEvt;
                 c.canceled += OnEvt;
@@ -74,8 +75,8 @@ namespace DotsInput
 
         protected override void OnStartRunning()
         {
-            Debug.Log(1);
             if (_outPaths != null) return;
+            registered = new List<InputActionAsset>();
             _cleanupActions = new List<InputAction>();
             _outPaths = new Dictionary<int, (int, DotsInputMapper.DotsInputType)>();
         }
@@ -92,6 +93,11 @@ namespace DotsInput
         {
             if (_inputs.IsCreated) _inputs.Dispose();
             if (_axis.IsCreated) _axis.Dispose();
+            foreach (var asset in registered)
+            {
+                asset.Disable();//hotenter
+            }
+
             foreach (var cleanupAction in _cleanupActions)
             {
                 cleanupAction.performed -= OnEvt;
@@ -168,6 +174,7 @@ namespace DotsInput
                 Debug.Log($"Registered primitives: {_inputs.Length}");
                 Debug.Log($"Registered axis: {_axis.Length}");
                 ecbM.RemoveComponent<DotsInputUnregisteredTag>(entity);
+                registered.Add(asset);
             }
 
 
