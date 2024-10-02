@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -9,7 +8,7 @@ using UnityEngine.InputSystem;
 
 namespace DotsInput
 {
-    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderFirst = true)]
+    [UpdateInGroup(typeof(InitializationSystemGroup), OrderFirst = true)]
     public partial class DotsInputSystem : SystemBase
     {
         private NativeList<DotsInputPrimitiveElement> _inputs;
@@ -61,7 +60,6 @@ namespace DotsInput
 
                 axisBuffer.Add(new DotsInputAxisElement() { });
                 inputs.Add(new DotsInputAxisElement() { });
-                Debug.Log(_outPaths.ContainsKey(c.GetHashCode()));
                 _outPaths[c.GetHashCode()] = (_axis.Length + i, type);
                 c.started += OnEvt;
                 c.performed += OnEvt;
@@ -76,27 +74,10 @@ namespace DotsInput
 
         protected override void OnStartRunning()
         {
+            Debug.Log(1);
             if (_outPaths != null) return;
             _cleanupActions = new List<InputAction>();
             _outPaths = new Dictionary<int, (int, DotsInputMapper.DotsInputType)>();
-
-            foreach (var (dotsInputRw, inputAssetRo, primitiveBuffer, axisBuffer) in SystemAPI.Query<
-                         RefRW<DotsInputData>,
-                         DotsInputAsset,
-                         DynamicBuffer<DotsInputPrimitiveElement>,
-                         DynamicBuffer<DotsInputAxisElement>
-                     >())
-            {
-                var asset = inputAssetRo.asset.Value;
-                asset.Enable();
-                ref var dotsInput = ref dotsInputRw.ValueRW;
-                RegisterPrimitives(ref dotsInput, inputAssetRo.asset, primitiveBuffer);
-                RegisterAxises(ref dotsInput, inputAssetRo.asset, axisBuffer);
-                Debug.Log($"Asset was added to dots input {asset.name}");
-            }
-
-            Debug.Log($"Registered primitives: {_inputs.Length}");
-            Debug.Log($"Registered axis: {_axis.Length}");
         }
 
         protected override void OnCreate()
@@ -125,6 +106,22 @@ namespace DotsInput
             if (!_outPaths.TryGetValue(obj.action.GetHashCode(), out var o)) return;
             switch (o.Item2)
             {
+                case DotsInputMapper.DotsInputType.Float:
+                {
+                    var v = new DotsInputPrimitiveElement();
+                    v.fValue = obj.ReadValue<float>();
+                    v.atTick = _tick;
+                    _inputs[o.Item1] = v;
+                    break;
+                }
+                case DotsInputMapper.DotsInputType.Int:
+                {
+                    var v = new DotsInputPrimitiveElement();
+                    v.iValue = obj.ReadValue<int>();
+                    v.atTick = _tick;
+                    _inputs[o.Item1] = v;
+                    break;
+                }
                 case DotsInputMapper.DotsInputType.Bool:
                 {
                     var v = new DotsInputPrimitiveElement();
@@ -153,6 +150,27 @@ namespace DotsInput
 
         protected override void OnUpdate()
         {
+            var ecb = SystemAPI.GetSingleton<EndInitializationEntityCommandBufferSystem.Singleton>();
+            var ecbM = ecb.CreateCommandBuffer(EntityManager.WorldUnmanaged);
+            foreach (var (dotsInputRw, inputAssetRo, primitiveBuffer, axisBuffer, entity) in SystemAPI.Query<
+                         RefRW<DotsInputData>,
+                         DotsInputAsset,
+                         DynamicBuffer<DotsInputPrimitiveElement>,
+                         DynamicBuffer<DotsInputAxisElement>
+                     >().WithAll<DotsInputUnregisteredTag>().WithEntityAccess())
+            {
+                var asset = inputAssetRo.asset.Value;
+                asset.Enable();
+                ref var dotsInput = ref dotsInputRw.ValueRW;
+                RegisterPrimitives(ref dotsInput, inputAssetRo.asset, primitiveBuffer);
+                RegisterAxises(ref dotsInput, inputAssetRo.asset, axisBuffer);
+                Debug.Log($"Asset was added to dots input {asset.name}");
+                Debug.Log($"Registered primitives: {_inputs.Length}");
+                Debug.Log($"Registered axis: {_axis.Length}");
+                ecbM.RemoveComponent<DotsInputUnregisteredTag>(entity);
+            }
+
+
             _tick = SystemAPI.GetSingleton<DotsInputFixedTickSystem.Singleton>().tick;
             _tick++; // Looks like input loop works after update cycle.
             new SyncInput()

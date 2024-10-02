@@ -11,7 +11,7 @@ namespace DotsInput
         [ReadOnly] public NativeArray<DotsInputAxisElement> axises;
         public uint tick;
 
-       
+
         public static DotsInputWrapper<TPrimitive, TAxis> FromJob(uint tick, DynamicBuffer<DotsInputPrimitiveElement> p, DynamicBuffer<DotsInputAxisElement> a)
         {
             return new DotsInputWrapper<TPrimitive, TAxis>()
@@ -21,7 +21,8 @@ namespace DotsInput
                 tick = tick,
             };
         }
-        
+
+        public bool isReady => primitives.Length > 0 || axises.Length > 0;
 
 
         public unsafe int GetInt(TPrimitive index) => primitives[*(int*)(&index)].GetInt();

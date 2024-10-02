@@ -16,7 +16,6 @@ namespace DotsInput
 
         public static bool TryGetPrimitiveDotsInputType(InputAction c, out DotsInputType type)
         {
-            Debug.Log(c.expectedControlType);
             switch (c.expectedControlType)
             {
                 case "Button":
@@ -25,10 +24,6 @@ namespace DotsInput
                 case "Axis":
                     type = DotsInputType.Float;
                     break;
-                case "Delta":
-                    type = DotsInputType.Float;
-                    break;
-
                 default:
                     type = DotsInputType.Int;
                     return false;
@@ -41,7 +36,7 @@ namespace DotsInput
         {
             switch (c.expectedControlType)
             {
-                case "Vector2":
+                case "Vector2" or "Delta":
                     type = DotsInputType.Float2;
                     break;
                 case "Vector3":

@@ -23,6 +23,7 @@ namespace DotsInput
                 AddBuffer<DotsInputPrimitiveElement>(e);
                 AddBuffer<DotsInputAxisElement>(e);
                 AddComponent<DotsInputData>(e);
+                AddComponent<DotsInputUnregisteredTag>(e);
             }
         }
     }
