@@ -1,4 +1,5 @@
-﻿using UnityEngine.InputSystem;
+﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace DotsInput
 {
@@ -15,18 +16,27 @@ namespace DotsInput
 
         public static bool TryGetPrimitiveDotsInputType(InputAction c, out DotsInputType type)
         {
+            Debug.Log(c.expectedControlType);
             switch (c.expectedControlType)
             {
                 case "Button":
                     type = DotsInputType.Bool;
                     break;
+                case "Axis":
+                    type = DotsInputType.Float;
+                    break;
+                case "Delta":
+                    type = DotsInputType.Float;
+                    break;
+
                 default:
                     type = DotsInputType.Int;
                     return false;
             }
 
             return true;
-        } 
+        }
+
         public static bool TryGetAxisDotsInputType(InputAction c, out DotsInputType type)
         {
             switch (c.expectedControlType)
