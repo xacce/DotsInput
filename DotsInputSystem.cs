@@ -58,6 +58,7 @@ namespace DotsInput
                         break;
                     default: continue;
                 }
+
                 axisBuffer.Add(new DotsInputAxisElement() { });
                 inputs.Add(new DotsInputAxisElement() { });
                 _outPaths[c.GetHashCode()] = (_axis.Length + i, type);
@@ -91,11 +92,9 @@ namespace DotsInput
 
         protected override void OnDestroy()
         {
-            if (_inputs.IsCreated) _inputs.Dispose();
-            if (_axis.IsCreated) _axis.Dispose();
             foreach (var asset in registered)
             {
-                asset.Disable();//hotenter
+                asset.Disable(); //hotenter
             }
 
             foreach (var cleanupAction in _cleanupActions)
@@ -104,12 +103,15 @@ namespace DotsInput
                 cleanupAction.started -= OnEvt;
                 cleanupAction.canceled -= OnEvt;
             }
+
+            if (_inputs.IsCreated) _inputs.Dispose();
+            if (_axis.IsCreated) _axis.Dispose();
         }
 
         private void OnEvt(InputAction.CallbackContext obj)
         {
             //Action guid cant be used cause its only unique per actionasset
-            if (!_outPaths.TryGetValue(obj.action.GetHashCode(), out var o)) return;
+            if (!_outPaths.TryGetValue(obj.action.GetHashCode(), out var o) && _inputs.IsCreated) return;
             switch (o.Item2)
             {
                 case DotsInputMapper.DotsInputType.Float:
