@@ -24,3 +24,6 @@ Entity entity)
         input.IsPressedNow(UrInputENum.PLAYER_FIRE)
     }
 ```
+
+
+`DOTS_INPUT_NETCODE` add if its netcode project

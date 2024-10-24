@@ -1,3 +1,4 @@
+
 using Unity.Burst;
 using Unity.Entities;
 
@@ -5,9 +6,10 @@ namespace DotsInput
 {
     
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderLast = true)]
+#if DOTS_INPUT_NETCODE
 [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
+#endif
 [BurstCompile]
-
 public partial struct DotsInputFixedTickSystem : ISystem
 {
     public struct Singleton : IComponentData
