@@ -5,7 +5,9 @@ namespace DotsInput
 {
     
 [UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderLast = true)]
+[WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
 [BurstCompile]
+
 public partial struct DotsInputFixedTickSystem : ISystem
 {
     public struct Singleton : IComponentData

@@ -20,7 +20,6 @@ namespace DotsInput
                 var assetName = importedAssets[i];
                 if (Path.GetExtension(assetName) != ".inputactions") continue;
                 if (assetName.Contains("ignore")) continue;
-                Debug.Log(assetName);
                 UpdateEnums(assetName);
             }
         }

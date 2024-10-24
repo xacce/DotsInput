@@ -9,6 +9,7 @@ using UnityEngine.InputSystem;
 namespace DotsInput
 {
     [UpdateInGroup(typeof(InitializationSystemGroup), OrderFirst = true)]
+    [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
     public partial class DotsInputSystem : SystemBase
     {
         private NativeList<DotsInputPrimitiveElement> _inputs;
