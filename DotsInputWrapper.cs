@@ -59,6 +59,7 @@ namespace DotsInput
         public unsafe float3 GetFloat3(TAxis index) => axises[*(int*)(&index)].GetFloat3();
         public unsafe bool GetBool(TPrimitive index) => primitives[*(int*)(&index)].GetBool();
         public unsafe bool IsPressedNow(TPrimitive index) => primitives[*(int*)(&index)].IsPressedAt(tick);
+        public unsafe bool IsPressed(TPrimitive index) => primitives[*(int*)(&index)].GetBool();
         public int GetInt(int index) => primitives[(index)].GetInt();
         public float GetFloat(int index) => primitives[(index)].GetFloat();
         public float2 GetFloat2(int index) => axises[(index)].GetFloat2();
