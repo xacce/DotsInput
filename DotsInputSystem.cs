@@ -8,7 +8,7 @@ using UnityEngine.InputSystem;
 
 namespace DotsInput
 {
-    [UpdateInGroup(typeof(InitializationSystemGroup), OrderFirst = true)]
+    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderFirst = true)]
 #if DOTS_INPUT_NETCODE
 [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
 #endif
@@ -180,6 +180,11 @@ namespace DotsInput
                 Debug.Log($"Registered axis: {_axis.Length}");
                 ecbM.RemoveComponent<DotsInputUnregisteredTag>(entity);
                 registered.Add(asset);
+            }
+
+            foreach (var inputString in SystemAPI.Query<RefRW<DotsInputString>>())
+            {
+                inputString.ValueRW.value = Input.inputString;
             }
 
 

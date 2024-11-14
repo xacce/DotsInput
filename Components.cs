@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine.InputSystem;
@@ -14,11 +15,16 @@ namespace DotsInput
 
     public partial struct DotsInputUnregisteredTag : IComponentData
     {
-        
     }
+
     public partial struct DotsInputAsset : IComponentData
     {
         public UnityObjectRef<InputActionAsset> asset;
+    }
+
+    public partial struct DotsInputString : IComponentData
+    {
+        public FixedString128Bytes value;
     }
 
     [InternalBufferCapacity(0)]
