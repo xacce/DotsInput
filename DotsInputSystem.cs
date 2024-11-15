@@ -8,7 +8,8 @@ using UnityEngine.InputSystem;
 
 namespace DotsInput
 {
-    [UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderFirst = true)]
+    [UpdateInGroup(typeof(PresentationSystemGroup))]
+    [UpdateAfter(typeof(DotsInputFixedTickSystem))]
 #if DOTS_INPUT_NETCODE
 [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
 #endif
@@ -189,7 +190,7 @@ namespace DotsInput
 
 
             _tick = SystemAPI.GetSingleton<DotsInputFixedTickSystem.Singleton>().tick;
-            _tick++; // Looks like input loop works after update cycle.
+            _tick += 2; // Looks like input loop works after update cycle.
             new SyncInput()
             {
                 axis = _axis,

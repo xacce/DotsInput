@@ -5,7 +5,7 @@ using Unity.Entities;
 namespace DotsInput
 {
     
-[UpdateInGroup(typeof(FixedStepSimulationSystemGroup), OrderLast = true)]
+[UpdateInGroup(typeof(InitializationSystemGroup), OrderLast = true)]
 #if DOTS_INPUT_NETCODE
 [WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
 #endif
