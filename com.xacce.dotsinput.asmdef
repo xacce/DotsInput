@@ -10,6 +10,7 @@
     "Unity.Physics",
     "Unity.Physics.Hybrid",
     "Unity.InputSystem",
+    "Unity.Transforms",
     "Unity.Burst",
     "com.xacce.core.runtime",
     "com.xacce.core.hybrid"

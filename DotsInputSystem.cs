@@ -3,6 +3,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -41,7 +42,6 @@ namespace DotsInput
                 _cleanupActions.Add(c);
                 i++;
             }
-
 
             dotsInput.primitiveRange = new int2(_inputs.Length, _inputs.Length + inputs.Length);
             _inputs.AddRange(inputs);
@@ -196,6 +196,14 @@ namespace DotsInput
                 axis = _axis,
                 inputs = _inputs,
             }.ScheduleParallel(Dependency).Complete();
+
+            if (SystemAPI.HasSingleton<InputPointerLtwPresentation>() && Camera.main)
+            {
+                var pointer = Pointer.current.position;
+                ref var pointerLtw = ref SystemAPI.GetComponentRW<LocalToWorld>(SystemAPI.GetSingletonEntity<InputPointerLtwPresentation>()).ValueRW;
+                var camRay = Camera.main.ScreenPointToRay(new Vector3(pointer.x.value, pointer.y.value, 0f));
+                pointerLtw.Value = Matrix4x4.TRS(camRay.origin, Quaternion.LookRotation(camRay.direction), Vector3.one);
+            }
         }
 
         [BurstCompile]

@@ -17,6 +17,11 @@ namespace DotsInput
     {
     }
 
+    public partial struct InputPointerLtwPresentation : IComponentData
+    {
+        
+    }
+    
     public partial struct DotsInputAsset : IComponentData
     {
         public UnityObjectRef<InputActionAsset> asset;
