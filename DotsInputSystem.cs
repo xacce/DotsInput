@@ -116,6 +116,7 @@ namespace DotsInput
         {
             //Action guid cant be used cause its only unique per actionasset
             if (!_outPaths.TryGetValue(obj.action.GetHashCode(), out var o) && _inputs.IsCreated) return;
+            
             switch (o.Item2)
             {
                 case DotsInputMapper.DotsInputType.Float:
