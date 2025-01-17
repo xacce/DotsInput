@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace DotsInput
@@ -19,9 +20,15 @@ namespace DotsInput
 
     public partial struct InputPointerLtwPresentation : IComponentData
     {
-        
+        public float3 viewPort;
+        public float3 screen;
+        public Matrix4x4 cameraMatrix;
+        public Matrix4x4 projectionMatrix;
+        public float screenWidth;
+        public float screenHeight;
+        public float farClip;
     }
-    
+
     public partial struct DotsInputAsset : IComponentData
     {
         public UnityObjectRef<InputActionAsset> asset;

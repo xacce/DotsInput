@@ -116,7 +116,7 @@ namespace DotsInput
         {
             //Action guid cant be used cause its only unique per actionasset
             if (!_outPaths.TryGetValue(obj.action.GetHashCode(), out var o) && _inputs.IsCreated) return;
-            
+
             switch (o.Item2)
             {
                 case DotsInputMapper.DotsInputType.Float:
@@ -201,9 +201,19 @@ namespace DotsInput
             if (SystemAPI.HasSingleton<InputPointerLtwPresentation>() && Camera.main)
             {
                 var pointer = Pointer.current.position;
+                var pos3d = new Vector3(pointer.x.value, pointer.y.value, 0f);
+                var e = SystemAPI.GetSingletonEntity<InputPointerLtwPresentation>();
+                ref var values = ref SystemAPI.GetSingletonRW<InputPointerLtwPresentation>().ValueRW;
                 ref var pointerLtw = ref SystemAPI.GetComponentRW<LocalToWorld>(SystemAPI.GetSingletonEntity<InputPointerLtwPresentation>()).ValueRW;
-                var camRay = Camera.main.ScreenPointToRay(new Vector3(pointer.x.value, pointer.y.value, 0f));
+                var camRay = Camera.main.ScreenPointToRay(pos3d);
                 pointerLtw.Value = Matrix4x4.TRS(camRay.origin, Quaternion.LookRotation(camRay.direction), Vector3.one);
+                values.viewPort = Camera.main.ScreenToViewportPoint(pos3d);
+                values.viewPort = pos3d;
+                values.cameraMatrix = Camera.main.worldToCameraMatrix;
+                values.projectionMatrix = Camera.main.projectionMatrix;
+                values.screenHeight = Screen.height;
+                values.screenWidth = Screen.width;
+                values.farClip = Camera.main.farClipPlane;
             }
         }
 
